@@ -6,6 +6,5 @@ The uploaded sketch uses a 'common low' configuration, meaning the ground is con
 
 ## Todo
 
-- Try configuring with common high configuration
 - More letters
 - Write a function to scroll text
