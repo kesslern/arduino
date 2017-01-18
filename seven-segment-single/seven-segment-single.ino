@@ -1,4 +1,4 @@
-# From: http://www.thecoderscorner.com/electronics/microcontrollers/driving-displays/45-arduino-example-for-driving-7-segment-led-s/
+// From: http://www.thecoderscorner.com/electronics/microcontrollers/driving-displays/45-arduino-example-for-driving-7-segment-led-s/
 // set this to the first pin where wiring starts.
 int ledStart = 1;
 
