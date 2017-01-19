@@ -1,14 +1,14 @@
 /*
- Shift Register Example
- for 74HC595 shift register
+  Shift Register Example
+  for 74HC595 shift register
 
- Shows how to interface with an 8-bit shift register. Cycles through each
- output, making one output HIGH at a time. To see the results of this, attach 
- an LED to each output on the shift register with a 220-1k ohm resistor.
+  Shows how to interface with an 8-bit shift register. Cycles through each
+  output, making one output HIGH at a time. To see the results of this, attach
+  an LED to each output on the shift register with a 220-1k ohm resistor.
 
- Reference: https://www.arduino.cc/en/tutorial/ShiftOut
+  Reference: https://www.arduino.cc/en/tutorial/ShiftOut
 
- Wiring:
+  Wiring:
 
   08 GND -> ground
   13 OE  -> ground
@@ -21,8 +21,8 @@
 
   01-07 -> Output 01-07
   15    -> Output 08
- 
- */
+
+*/
 
 const int latchPin = 9; // ST_CP
 const int clockPin = 8; // SH_CP
@@ -30,7 +30,7 @@ const int dataPin = 10; // DS
 
 void setup() {
   pinMode(latchPin, OUTPUT);
-  pinMode(dataPin, OUTPUT);  
+  pinMode(dataPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
 }
 
@@ -39,9 +39,9 @@ void loop() {
     if (i == 0) {
       registerWrite(8, LOW);
     } else {
-      registerWrite(i-1, LOW);
+      registerWrite(i - 1, LOW);
     }
-    
+
     registerWrite(i, HIGH);
     delay(50);
   }
@@ -60,7 +60,7 @@ void registerWrite(int whichPin, int whichState) {
   // shift the bits out:
   shiftOut(dataPin, clockPin, MSBFIRST, bitsToSend);
 
-    // turn on the output so the LEDs can light up:
+  // turn on the output so the LEDs can light up:
   digitalWrite(latchPin, HIGH);
 
 }
