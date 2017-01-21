@@ -1,53 +1,64 @@
-/*
-  State change detection (edge detection)
+/**
+ * State change detection (edge detection)
+ *
+ * The circuit:
+ * - VCC to one side of pushbutton 
+ * - pin 9 to other side of pushbutton
+ * - resistor from same side as pin 9 going to ground 
+ *
+ * A small capacitor can be added to both ends of the resistor
+ * to reduce bouncing.
+ *
+ **/
 
- Often, you don't need to know the state of a digital input all the time,
- but you just need to know when the input changes from one state to another.
- For example, you want to know when a button goes from OFF to ON.  This is called
- state change detection, or edge detection.
+#define DOWN false
+#define UP true
 
- This example shows how to detect when a button or button changes from off to on
- and on to off.
+#define LED_PIN 1 // built in LED
+#define BUTTON_PIN 9
 
- The circuit:
- * pushbutton attached to pin 2 from +5V
- * 10K resistor attached to pin 2 from ground
- * LED attached from pin 13 to ground (or use the built-in LED on
-   most Arduino boards)
+boolean buttonState = UP;
+boolean buttonStateChanged = false;
 
- created  27 Sep 2005
- modified 30 Aug 2011
- by Tom Igoe
+void updateButtonState(boolean newState) {
+  
+  if (buttonState == newState) {
+    buttonStateChanged = false;
+  } else {
+    buttonStateChanged = true;
+    buttonState = newState;
+  }
+}
 
-This example code is in the public domain.
 
- http://www.arduino.cc/en/Tutorial/ButtonStateChange
+void readButton() {
 
- */
+  int buttonState = digitalRead(BUTTON_PIN);
 
-// this constant won't change:
-const int  buttonPin = 9;    // the pin that the pushbutton is attached to
-const int ledPin = 1;       // the pin that the LED is attached to
-
-// Variables will change:
-int buttonPushCounter = 0;   // counter for the number of button presses
-int buttonState = 0;         // current state of the button
-int lastButtonState = 0;     // previous state of the button
+  if (buttonState == HIGH) {
+    updateButtonState(DOWN);
+    digitalWrite(LED_PIN, HIGH);
+  } else {
+    updateButtonState(UP);
+    digitalWrite(LED_PIN, LOW);
+  }
+}
 
 void setup() {
-  pinMode(buttonPin, INPUT);
-  pinMode(ledPin, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT);
+  pinMode(LED_PIN, OUTPUT);
 }
 
 
 void loop() {
-  // read the pushbutton input pin:
-  buttonState = digitalRead(buttonPin);
+  readButton();
 
-  // compare the buttonState to its previous state
-  if (buttonState == HIGH) {
-    digitalWrite(ledPin, HIGH);
-  } else {
-    digitalWrite(ledPin, LOW);
+  if (buttonStateChanged) {
+    if (buttonState == UP) {
+      Particle.publish("button state", "up");
+    } else {
+      Particle.publish("button state", "down");
+    }
   }
 }
+
